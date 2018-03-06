@@ -45,6 +45,7 @@ public class BoatTest {
         
         private TreeSet<SmallBoat> smallBoatsLightFirst = new TreeSet<>(Comparator.comparing(SmallBoat::getTotalWeight).thenComparing(SmallBoat::getId));
         private TreeSet<Passenger> passengersHeavyFirst = new TreeSet<>(Comparator.reverseOrder());
+        private WeighingScale weighingScale = new WeighingScale();
         
         public BigBoat(final int numberOfSmallBoats, final Integer[] bigBoatArray) {
             for (int i = 0; i < numberOfSmallBoats; i++) {
@@ -52,11 +53,13 @@ public class BoatTest {
                 smallBoatsLightFirst.add(e);
             }
             AtomicInteger atomicInteger = new AtomicInteger();
-            passengersHeavyFirst.addAll(stream(bigBoatArray).map(integer -> new Passenger(atomicInteger.incrementAndGet(), integer)).collect(toList()));
+            passengersHeavyFirst.addAll(stream(bigBoatArray).peek(weight -> weighingScale.add(weight)).map(weight -> new Passenger(atomicInteger.incrementAndGet(), weight)).collect(toList()));
         }
         
         public Integer rescue() {
-            passengersHeavyFirst.forEach(this::addToLightestSmallBoat);
+            for (Passenger passenger : passengersHeavyFirst) {
+                addToLightestSmallBoat(passenger);
+            }
             if (smallBoatsLightFirst.isEmpty()) {
                 return 0;
             }
@@ -172,6 +175,19 @@ public class BoatTest {
             sb.append('}');
             return sb.toString();
         }
+    }
+
+    private static class WeighingScale {
+        private Integer weight = 0;
+
+        public void add(Integer weight) {
+            this.weight = this.weight + weight;
+        }
+
+        public Integer read() {
+            return weight;
+        }
+
     }
     
 }
