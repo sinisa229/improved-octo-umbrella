@@ -1,5 +1,6 @@
 package com.poker;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.junit.Test;
 
@@ -33,55 +34,87 @@ public class PokerTest {
 
     @Test
     public void shouldCompareCardByCard() throws Exception {
-        List<Card> cards = cards("AS", "KS", "QS", "JS", "TS", "9S", "8S", "7S", "6S", "5S", "4S", "3S", "2S");
-        Collections.sort(cards);
-        assertThat(cards, contains(c("2S"), c("3S"), c("4S"), c("5S"), c("6S"), c("7S"), c("8S"), c("9S"), c("TS"), c("JS"), c("QS"), c("KS"), c("AS")));
+        Hand cards = new Hand("AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S");
+        assertThat(cards.getCards(), contains(c("2S"), c("3S"), c("4S"), c("5S"), c("6S"), c("7S"), c("8S"), c("9S"), c("TS"), c("JS"), c("QS"), c("KS"), c("AS")));
     }
 
     @Test
     public void cardCounter() throws Exception {
-        CardCounter cardCounter = new CardCounter();
-        cardCounter.addAll(c("AS"), c("2S"), c("AC"));
+        CardCounter cardCounter = new CardCounter(new Hand("AS 2S AC"));
         assertThat(cardCounter.getValueCounts(), contains(1, 2));
     }
 
     @Test
     public void cardCounterFullHouse() throws Exception {
-        CardCounter cardCounter = new CardCounter();
-        cardCounter.addAll(c("AS"), c("2S"), c("AS"), c("2S"), c("AC"));
+        CardCounter cardCounter = new CardCounter(new Hand("AS 2S AS 2S AC"));
         assertThat(cardCounter.getValueCounts(), contains(2, 3));
     }
 
     @Test
+    public void cardCounterShouldReturnHighestCount() throws Exception {
+        CardCounter cardCounter = new CardCounter(new Hand("AS 2S AS 2S AC"));
+        assertThat(cardCounter.areAllCardsDifferentValues(), equalTo(false));
+    }
+
+    @Test
     public void cardCounterFullHousePattern() throws Exception {
-        CardCounter cardCounter = new CardCounter();
-        cardCounter.addAll(c("AS"), c("2S"), c("AS"), c("2S"), c("AC"));
+        CardCounter cardCounter = new CardCounter(new Hand("AS 2S AS 2S AC"));
         assertThat(cardCounter.getCountsPattern(), equalTo("23"));
     }
 
     @Test
     public void suiteMatcherShouldMatch() throws Exception {
-        assertTrue(new SuiteMatcher().areAllSameSuit(cards("AS", "KS","2S")));
+        assertTrue(new SuiteMatcher().areAllSameSuit(new Hand("AS KS 2S")));
     }
 
     @Test
     public void suiteMatcherShouldNotMatch() throws Exception {
-        assertFalse(new SuiteMatcher().areAllSameSuit(cards("AS", "KH","2S")));
+        assertFalse(new SuiteMatcher().areAllSameSuit(new Hand("AS KH 2S")));
     }
 
-    private List<Card> cards(String... cardStrings) {
-        return stream(cardStrings).map(this::c).collect(toList());
+    @Test
+    public void shouldEvaluateOrdered() throws Exception {
+        final Hand hand = new Hand("2S 3S 4S");
+        final CardCounter cardCounter = new CardCounter(hand);
+        assertTrue(new OrderMatcher(cardCounter).areOrdered(hand));
+    }
+
+    @Test
+    public void shouldEvaluateNotOrdered() throws Exception {
+        final Hand hand = new Hand("2S 2S 4S");
+        final CardCounter cardCounter = new CardCounter(hand);
+        assertFalse(new OrderMatcher(cardCounter).areOrdered(hand));
     }
 
     private Card c(String card) {
         return new Card(card);
     }
 
+    @Data
+    private static class Hand {
+
+        private final List<Card> cards = new ArrayList<>();
+
+        public Hand(String handString) {
+            stream(handString.split("\\s")).forEach(s -> this.cards.add(new Card(s)));
+            cards.sort(Card::compareTo);
+        }
+
+        public Card getHighest() {
+            return cards.get(cards.size()-1);
+        }
+
+        public Card getLowest() {
+            return cards.get(0);
+        }
+
+    }
+
     private enum Value {
         V_2(2, "Two"),
         V_3(3, "Three"),
         V_4(4, "Four"),
-        V_5(5, "Four"),
+        V_5(5, "Five"),
         V_6(6, "Six"),
         V_7(7, "Seven"),
         V_8(8, "Eight"),
@@ -104,15 +137,20 @@ public class PokerTest {
         public Integer getWeight() {
             return weight;
         }
-
-
     }
 
-    private static enum Suit {
-        H,
-        D,
-        C,
-        S
+    private enum Suit {
+        H("Hearts"),
+        D("Diamonds"),
+        C("Clubs"),
+        S("Spades");
+
+        private final String description;
+
+        Suit(final String description) {
+            this.description = description;
+        }
+
     }
 
     @Data
@@ -133,14 +171,14 @@ public class PokerTest {
 
     }
 
-    private class SuiteMatcher {
+    private static class SuiteMatcher {
 
-        public boolean areNotSameSuit(List<Card> cards) {
+        public boolean areNotSameSuit(Hand cards) {
             return areAllSameSuit(cards).equals(false);
         }
 
-        public Boolean areAllSameSuit(List<Card> cards) {
-            final long distinctSuitCount = getDistinctSuits(cards).count();
+        public Boolean areAllSameSuit(Hand cards) {
+            final long distinctSuitCount = getDistinctSuits(cards.getCards()).count();
             return distinctSuitCount == 1;
         }
 
@@ -150,12 +188,26 @@ public class PokerTest {
 
     }
 
+    private static class OrderMatcher {
+
+        private final CardCounter cardCounter;
+
+        public OrderMatcher(CardCounter cardCounter) {
+            this.cardCounter = cardCounter;
+        }
+
+        public boolean areOrdered(Hand hand) {
+            return cardCounter.areAllCardsDifferentValues() && (hand.getHighest().getValue().getWeight() - hand.getLowest().getValue().getWeight() == hand.getCards().size() - 1);
+        }
+
+    }
+
     private static class CardCounter {
 
         private final Map<Value, CountResult> valueCounts = new TreeMap<>(Comparator.reverseOrder());
 
-        public void addAll(Card... c) {
-            stream(c).forEach(this::add);
+        public CardCounter(final Hand hand) {
+            hand.getCards().forEach(this::add);
         }
 
         public void add(Card c) {
@@ -164,13 +216,20 @@ public class PokerTest {
         }
 
         public List<Integer> getValueCounts() {
-            return valueCounts.values().stream().map(value -> value.count).sorted().collect(toList());
+            return getSorted().collect(toList());
         }
 
         public String getCountsPattern() {
-            return getValueCounts().stream().map(integer -> integer.toString()).collect(joining());
+            return getValueCounts().stream().map(Object::toString).collect(joining());
         }
 
+        public boolean areAllCardsDifferentValues() {
+            return getCountsPattern().endsWith("1");
+        }
+
+        private Stream<Integer> getSorted() {
+            return valueCounts.values().stream().map(value -> value.count).sorted();
+        }
     }
 
     @Data
