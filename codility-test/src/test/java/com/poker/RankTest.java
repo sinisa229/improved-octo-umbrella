@@ -20,6 +20,8 @@ public class RankTest {
         Boolean sameSuite();
         Boolean notSameSuite();
         Boolean cardsOrdered();
+
+        Boolean countPattern(String s);
     }
 
     private class RankFactory {
@@ -31,7 +33,7 @@ public class RankTest {
         }
 
         public Rank getHighestRank() {
-            if (countPattern("11111") && sameSuite() && cardsOrdered()) {
+            if () {
 
             }
         }
@@ -60,6 +62,14 @@ public class RankTest {
 
     interface Rank {
         Integer getRankWeight();
+
+    }
+
+    class RoyalFlush {
+
+        public Boolean match(CardProcessor cp) {
+            return cp.countPattern("11111") && cp.sameSuite() && cp.cardsOrdered();
+        }
     }
 
 }
