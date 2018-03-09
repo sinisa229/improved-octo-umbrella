@@ -19,19 +19,6 @@ import static org.junit.Assert.assertTrue;
 // https://projecteuler.net/problem=54
 public class PokerTest {
 
-//    private enum Rank {
-//        HIGH_CARD(11111 && notSameSuite() && notOrdered()),
-//        ONE_PAIR(1112 && notSameSuite()),
-//        TWO_PAIRS(122 && notSameSuite()),
-//        THREE_OF_A_KIND(113 && notSameSuite()),
-//        STRAIGHT(11111 && notSameSuite() && ordered()),
-//        FLUSH(11111 && sameSuite()),
-//        FULL_HOUSE(23 && notSameSuite()),
-//        FOUR_OF_A_KIND(14 && notSameSuite()),
-//        STRAIGHT_FLUSH(11111 && sameSuite() && ordered()),
-//        ROYAL_FLUSH(11111 && sameSuite() && ordered() && max == ace)
-//    }
-
     @Test
     public void shouldCompareCardByCard() throws Exception {
         Hand cards = new Hand("AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S");
