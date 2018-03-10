@@ -5,69 +5,68 @@ import org.junit.Test;
 import static com.poker.rank.RankType.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.*;
 
 public class RankProviderTest {
 
     @Test
     public void shouldReturnRoyalFlush() throws Exception {
-        verifyRank("11111", true, true, true, "1", ROYAL_FLUSH);
+        verifyRank("11111", true, true, true, 1, ROYAL_FLUSH);
     }
 
     @Test
     public void shouldReturnStraightFlush() throws Exception {
-        verifyRank("11111", true, true, false, "1", STRAIGHT_FLUSH);
+        verifyRank("11111", true, true, false, 1, STRAIGHT_FLUSH);
     }
 
     @Test
     public void shouldReturnFourOfAKind() throws Exception {
-        verifyRank("14", false, false, null, "1", FOUR_OF_A_KIND);
+        verifyRank("14", false, false, null, 1, FOUR_OF_A_KIND);
     }
 
     @Test
     public void shouldReturnFullHouse() throws Exception {
-        verifyRank("23", false, false, null, "1", FULL_HOUSE);
+        verifyRank("23", false, false, null, 1, FULL_HOUSE);
     }
 
     @Test
     public void shouldReturnFlush() throws Exception {
-        verifyRank("11111", false, true, null, "1", FLUSH);
+        verifyRank("11111", false, true, null, 1, FLUSH);
     }
 
     @Test
     public void shouldReturnStraight() throws Exception {
-        verifyRank("11111", true, false, null, "1", STRAIGHT);
+        verifyRank("11111", true, false, null, 1, STRAIGHT);
     }
 
     @Test
     public void shouldReturnThreeOfAKind() throws Exception {
-        verifyRank("113", false, false, null, "1", THREE_OF_A_KIND);
+        verifyRank("113", false, false, null, 1, THREE_OF_A_KIND);
     }
 
     @Test
     public void shouldReturnTwoOfAKind() throws Exception {
-        verifyRank("122", false, false, null, "1", TWO_PAIRS);
+        verifyRank("122", false, false, null, 1, TWO_PAIRS);
     }
 
     @Test
     public void shouldReturnOnePair() throws Exception {
-        verifyRank("1112", false, false, null, "1", ONE_PAIR);
+        verifyRank("1112", false, false, null, 1, ONE_PAIR);
     }
 
     @Test
     public void shouldReturnHighCard() throws Exception {
-        verifyRank("11111", false, false, null, "1", HIGH_CARD);
+        verifyRank("11111", false, false, null, 1, HIGH_CARD);
     }
 
-    private void verifyRank(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final String valuePattern, final RankType royalFlush) {
+    private void verifyRank(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final Integer valuePattern, final RankType royalFlush) {
         assertThat(getRankType(countPattern, areCardsOrdered, sameSuite, containsAce, valuePattern), equalTo(royalFlush));
     }
 
-    private RankType getRankType(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final String valuePattern) {
+    private RankType getRankType(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final Integer valuePattern) {
         return new RankProvider(cardProcessor(countPattern, areCardsOrdered, sameSuite, containsAce, valuePattern)).getHighestRank().getRankType();
     }
 
-    private HandAnalyzer cardProcessor(final String countPattern, final Boolean areCardsOrdered, final Boolean sameSuite, final Boolean containsAce, final String valuePattern) {
+    private HandAnalyzer cardProcessor(final String countPattern, final Boolean areCardsOrdered, final Boolean sameSuite, final Boolean containsAce, final Integer valuePattern) {
         return new HandAnalyzer() {
             @Override
             public Boolean matchesCountPattern(final String s) {
@@ -90,7 +89,7 @@ public class RankProviderTest {
             }
 
             @Override
-            public String getValuePattern() {
+            public Integer getValueWeight() {
                 return valuePattern;
             }
         };

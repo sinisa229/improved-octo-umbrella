@@ -9,7 +9,7 @@ public interface HandAnalyzer {
 
     Boolean containsAce();
 
-    String getValuePattern();
+    Integer getValueWeight();
 
     default Boolean cardsUnordered() {
         return areCardsOrdered().equals(false);
@@ -23,7 +23,4 @@ public interface HandAnalyzer {
         return containsAce().equals(false);
     }
 
-    default Integer getValuePatternAsInt() {
-        return new Integer(getValuePattern());
-    }
 }

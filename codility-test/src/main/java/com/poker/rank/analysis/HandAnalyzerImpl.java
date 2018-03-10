@@ -11,6 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.joining;
@@ -48,13 +49,13 @@ public class HandAnalyzerImpl implements HandAnalyzer {
     }
 
     @Override
-    public String getValuePattern() {
-        //TODO implement
-        return null;
+    public Integer getValueWeight() {
+        AtomicInteger atomicInteger = new AtomicInteger();
+        return valueCounts.values().stream().sorted(Comparator.comparing(CountResult::getCount).thenComparing(CountResult::getValue)).mapToInt(countResult -> new Double(countResult.getValue().getWeight()*Math.pow(10,atomicInteger.getAndIncrement())).intValue()).sum();
     }
 
     private List<Integer> getValueCounts() {
-        return getSorted().collect(toList());
+        return getSortedCounts().collect(toList());
     }
 
     private String getCountsPattern() {
@@ -78,7 +79,7 @@ public class HandAnalyzerImpl implements HandAnalyzer {
         valueCounts.computeIfPresent(c.getValue(), (value, countResult) -> new CountResult(c.getValue(), countResult.count+1));
     }
 
-    private Stream<Integer> getSorted() {
+    private Stream<Integer> getSortedCounts() {
         return valueCounts.values().stream().map(value -> value.count).sorted();
     }
 

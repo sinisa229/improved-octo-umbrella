@@ -14,7 +14,7 @@ public class RankProvider {
 
     public Rank getHighestRank() {
         final Optional<RankType> rankType = stream(RankType.values()).filter(rt -> rt.match(handAnalyzer)).findFirst();
-        return new Rank(rankType.orElseThrow(() -> new RuntimeException("No type matches handAnalyzer: " + handAnalyzer)), handAnalyzer.getValuePatternAsInt());
+        return new Rank(rankType.orElseThrow(() -> new RuntimeException("No type matches handAnalyzer: " + handAnalyzer)), handAnalyzer.getValueWeight());
     }
 
 }
