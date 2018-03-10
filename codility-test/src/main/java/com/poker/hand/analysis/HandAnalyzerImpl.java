@@ -53,7 +53,7 @@ public class HandAnalyzerImpl implements HandAnalyzer {
         return null;
     }
 
-    public List<Integer> getValueCounts() {
+    private List<Integer> getValueCounts() {
         return getSorted().collect(toList());
     }
 
@@ -69,7 +69,7 @@ public class HandAnalyzerImpl implements HandAnalyzer {
         return hand.getHighest().getValue().getWeight();
     }
 
-    public boolean areAllCardsDifferentValues() {
+    private boolean areAllCardsDifferentValues() {
         return getCountsPattern().endsWith("1");
     }
 

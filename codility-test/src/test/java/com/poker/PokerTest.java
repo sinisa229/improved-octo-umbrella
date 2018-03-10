@@ -16,26 +16,20 @@ public class PokerTest {
 
     @Test
     public void shouldCompareCardByCard() throws Exception {
-        Hand cards = new Hand("AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S");
-        assertThat(cards.getCards(), contains(c("2S"), c("3S"), c("4S"), c("5S"), c("6S"), c("7S"), c("8S"), c("9S"), c("TS"), c("JS"), c("QS"), c("KS"), c("AS")));
+        Hand hand = new Hand("AS KS QS JS TS 9S 8S 7S 6S 5S 4S 3S 2S");
+        assertThat(hand.getCards(), contains(c("2S"), c("3S"), c("4S"), c("5S"), c("6S"), c("7S"), c("8S"), c("9S"), c("TS"), c("JS"), c("QS"), c("KS"), c("AS")));
     }
 
     @Test
     public void cardCounter() throws Exception {
         HandAnalyzerImpl handAnalyzerImpl = new HandAnalyzerImpl(new Hand("AS 2S AC"));
-        assertThat(handAnalyzerImpl.getValueCounts(), contains(1, 2));
+        assertTrue(handAnalyzerImpl.matchesCountPattern("12"));
     }
 
     @Test
     public void cardCounterFullHouse() throws Exception {
         HandAnalyzerImpl handAnalyzerImpl = new HandAnalyzerImpl(new Hand("AS 2S AS 2S AC"));
-        assertThat(handAnalyzerImpl.getValueCounts(), contains(2, 3));
-    }
-
-    @Test
-    public void cardCounterShouldReturnHighestCount() throws Exception {
-        HandAnalyzerImpl handAnalyzerImpl = new HandAnalyzerImpl(new Hand("AS 2S AS 2S AC"));
-        assertThat(handAnalyzerImpl.areAllCardsDifferentValues(), equalTo(false));
+        assertTrue(handAnalyzerImpl.matchesCountPattern("23"));
     }
 
     @Test
@@ -62,8 +56,13 @@ public class PokerTest {
     }
 
     @Test
-    public void shouldEvaluateNotOrdered() throws Exception {
+    public void shouldEvaluateNotOrderedWhenDuplicatedValue() throws Exception {
         assertFalse(new HandAnalyzerImpl(new Hand("2S 2S 4S")).areCardsOrdered());
+    }
+
+    @Test
+    public void shouldEvaluateNotOrderedWhenMissingValue() throws Exception {
+        assertFalse(new HandAnalyzerImpl(new Hand("2S 5S 4S")).areCardsOrdered());
     }
 
     private Card c(String card) {
