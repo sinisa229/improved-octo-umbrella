@@ -80,7 +80,7 @@ public class HandAnalyzerImpl implements HandAnalyzer {
     }
 
     private Stream<Integer> getSortedCounts() {
-        return valueCounts.values().stream().map(value -> value.count).sorted();
+        return valueCounts.values().stream().map(CountResult::getCount).sorted();
     }
 
     private Stream<Suit> getDistinctSuits() {

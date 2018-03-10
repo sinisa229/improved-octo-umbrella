@@ -70,4 +70,7 @@ public enum RankType {
 
     public abstract boolean match(final HandAnalyzer cp);
 
+    public Integer getRankWeight() {
+        return rankWeight;
+    }
 }
