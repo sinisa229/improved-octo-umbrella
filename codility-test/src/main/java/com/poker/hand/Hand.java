@@ -1,6 +1,5 @@
 package com.poker.hand;
 
-import com.poker.hand.Card;
 import lombok.Data;
 
 import java.util.ArrayList;

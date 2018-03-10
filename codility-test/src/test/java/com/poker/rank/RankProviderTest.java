@@ -1,25 +1,13 @@
-package com.poker;
+package com.poker.rank;
 
-import com.poker.rank.HandAnalyzer;
-import com.poker.rank.Rank;
-import com.poker.rank.RankProvider;
-import com.poker.rank.RankType;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-
 import static com.poker.rank.RankType.*;
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.*;
 
-public class RankTest {
-
-    @Test
-    public void rankTypeValuesShouldBeOrdered() throws Exception {
-        assertThat(asList(RankType.values()), contains(ROYAL_FLUSH, STRAIGHT_FLUSH, FOUR_OF_A_KIND, FULL_HOUSE, FLUSH, STRAIGHT, THREE_OF_A_KIND, TWO_PAIRS, ONE_PAIR, HIGH_CARD));
-    }
+public class RankProviderTest {
 
     @Test
     public void shouldReturnRoyalFlush() throws Exception {
@@ -69,22 +57,6 @@ public class RankTest {
     @Test
     public void shouldReturnHighCard() throws Exception {
         verifyRank("11111", false, false, null, "1", HIGH_CARD);
-    }
-
-    @Test
-    public void shouldRankByRankTypeFirst() throws Exception {
-        List<Rank> ranks = asList(r(HIGH_CARD), r(ONE_PAIR), r(TWO_PAIRS), r(THREE_OF_A_KIND), r(STRAIGHT), r(FLUSH), r(FULL_HOUSE), r(FOUR_OF_A_KIND), r(STRAIGHT_FLUSH), r(ROYAL_FLUSH));
-        Collections.sort(ranks);
-        assertThat(ranks, contains(r(ROYAL_FLUSH), r(STRAIGHT_FLUSH), r(FOUR_OF_A_KIND), r(FULL_HOUSE), r(FLUSH), r(STRAIGHT), r(THREE_OF_A_KIND), r(TWO_PAIRS), r(ONE_PAIR), r(HIGH_CARD)));
-    }
-
-    @Test
-    public void shouldSortByRankedCardsWhenSameRankType() throws Exception {
-        assertThat(new Rank(ROYAL_FLUSH, 10), greaterThan(new Rank(ROYAL_FLUSH, 5)));
-    }
-
-    private Rank r(RankType onePair) {
-        return new Rank(onePair, 10);
     }
 
     private void verifyRank(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final String valuePattern, final RankType royalFlush) {
