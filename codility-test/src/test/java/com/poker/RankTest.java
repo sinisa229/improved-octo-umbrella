@@ -1,15 +1,15 @@
 package com.poker;
 
-import com.poker.hand.rank.HandAnalyzer;
-import com.poker.hand.rank.Rank;
-import com.poker.hand.rank.RankProvider;
-import com.poker.hand.rank.RankType;
+import com.poker.rank.HandAnalyzer;
+import com.poker.rank.Rank;
+import com.poker.rank.RankProvider;
+import com.poker.rank.RankType;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.List;
 
-import static com.poker.hand.rank.RankType.*;
+import static com.poker.rank.RankType.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;

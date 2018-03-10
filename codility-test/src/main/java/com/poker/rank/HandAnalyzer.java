@@ -1,4 +1,4 @@
-package com.poker.hand.rank;
+package com.poker.rank;
 
 public interface HandAnalyzer {
     Boolean matchesCountPattern(String s);

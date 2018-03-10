@@ -1,10 +1,10 @@
-package com.poker.hand.analysis;
+package com.poker.rank.analysis;
 
 import com.poker.hand.Card;
 import com.poker.hand.Hand;
 import com.poker.hand.Suit;
 import com.poker.hand.Value;
-import com.poker.hand.rank.HandAnalyzer;
+import com.poker.rank.HandAnalyzer;
 import lombok.Data;
 
 import java.util.Comparator;

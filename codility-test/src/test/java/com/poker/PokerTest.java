@@ -2,12 +2,11 @@ package com.poker;
 
 import com.poker.hand.Card;
 import com.poker.hand.Hand;
-import com.poker.hand.analysis.HandAnalyzerImpl;
+import com.poker.rank.analysis.HandAnalyzerImpl;
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

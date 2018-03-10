@@ -1,4 +1,4 @@
-package com.poker.hand.rank;
+package com.poker.rank;
 
 import lombok.Data;
 
