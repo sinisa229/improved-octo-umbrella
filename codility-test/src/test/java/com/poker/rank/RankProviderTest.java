@@ -63,7 +63,7 @@ public class RankProviderTest {
     }
 
     private RankType getRankType(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final Integer valuePattern) {
-        return new RankProvider(cardProcessor(countPattern, areCardsOrdered, sameSuite, containsAce, valuePattern)).getHighestRank().getRankType();
+        return new RankProvider(cardProcessor(countPattern, areCardsOrdered, sameSuite, containsAce, valuePattern)).getHighest().getRankType();
     }
 
     private HandAnalyzer cardProcessor(final String countPattern, final Boolean areCardsOrdered, final Boolean sameSuite, final Boolean containsAce, final Integer valuePattern) {
