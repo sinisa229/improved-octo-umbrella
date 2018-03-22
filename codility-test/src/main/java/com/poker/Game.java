@@ -9,9 +9,6 @@ import com.poker.rank.analysis.HandAnalyzerImpl;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static java.util.Arrays.asList;
 
 public class Game {
 

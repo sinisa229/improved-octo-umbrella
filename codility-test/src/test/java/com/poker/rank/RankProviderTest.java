@@ -58,6 +58,11 @@ public class RankProviderTest {
         verifyRank("11111", false, false, null, 1, HIGH_CARD);
     }
 
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowWhenUnexpectedSituation() throws Exception {
+        verifyRank("5", false, false, null, 1, HIGH_CARD);
+    }
+
     private void verifyRank(final String countPattern, final boolean areCardsOrdered, final boolean sameSuite, final Boolean containsAce, final Integer valuePattern, final RankType royalFlush) {
         assertThat(getRankType(countPattern, areCardsOrdered, sameSuite, containsAce, valuePattern), equalTo(royalFlush));
     }
